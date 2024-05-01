@@ -15,6 +15,11 @@ otelcol.receiver.prometheus "default" {
   }
 }
 
+// Convert OTLP data for Prometheus
+otelcol.exporter.prometheus "default" {
+  forward_to = [prometheus.relabel.instance.receiver]
+}
+
 // Convert Loki data for OTLP
 otelcol.receiver.loki "default" {
   output {

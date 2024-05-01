@@ -13,8 +13,8 @@ otelcol.receiver.otlp "otlp" {
   http {}
 
   output {
-    metrics = [prometheus.relabel.instance.receiver]
-    logs    = [otelcol.receiver.loki.default.receiver]
+    metrics = [otelcol.exporter.prometheus.default.input]
+    logs    = [otelcol.exporter.otlp.gc_fwd.input]
     traces  = [otelcol.exporter.otlp.gc_fwd.input]
   }
 }
