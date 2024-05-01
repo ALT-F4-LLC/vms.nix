@@ -1,4 +1,7 @@
-ami_bucket := "altf4llc-hayden-test-nix-amis"
+ami_bucket := "altf4llc-nix-ami-uploads"
+
+check:
+  nix flake check
 
 build profile:
   nix build --json --print-build-logs --no-link '.#{{profile}}'
@@ -17,7 +20,7 @@ publish-ami profile:
   aws s3 cp "$OUTPUT/$IMAGE_PATH" "s3://{{ami_bucket}}/$IMAGE_NAME.vhd"
 
   echo "Starting snapshot import."
-  TASK_ID=$(aws ec2 import-snapshot --disk-container "Format=VHD,UserBucket={S3Bucket=altf4llc-hayden-test-nix-amis,S3Key=$IMAGE_NAME.vhd}" --output json | jq -r ".ImportTaskId")
+  TASK_ID=$(aws ec2 import-snapshot --disk-container "Format=VHD,UserBucket={S3Bucket={{ami_bucket}},S3Key=$IMAGE_NAME.vhd}" --output json | jq -r ".ImportTaskId")
 
   echo "Waiting for snapshot import to complete."
   until [[ $(aws ec2 describe-import-snapshot-tasks --import-task-ids "$TASK_ID" --output json | jq -r '.ImportSnapshotTasks[].SnapshotTaskDetail.Status') == "completed" ]]; do
