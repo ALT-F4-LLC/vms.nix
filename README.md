@@ -1,6 +1,7 @@
 # `vms-nix`
 
 [![License: Apache-2.0](https://img.shields.io/github/license/ALT-F4-LLC/vms-nix)](./LICENSE)
+[![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/ALT-F4-LLC/vms-nix/.github%2Fworkflows%2Fflake.yaml)](https://github.com/ALT-F4-LLC/vms-nix/actions)
 
 NixOS-based VM images for ALT-F4 LLC. These images are built using
 [nixos-generators](https://github.com/nix-community/nixos-generators) and
