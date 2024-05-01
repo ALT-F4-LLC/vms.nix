@@ -1,4 +1,4 @@
-prometheus.scrape "ecs-agent" {
+prometheus.scrape "ecs_agent" {
   targets = [
     {"__address__" = "127.0.0.1:51680", instance = env("HOSTNAME")},
   ]
@@ -15,7 +15,7 @@ otelcol.receiver.otlp "otlp" {
   output {
     metrics = [prometheus.relabel.instance.receiver]
     logs    = [otelcol.receiver.loki.default.receiver]
-    traces  = [otelcol.exporter.otlp.gc-fwd.input]
+    traces  = [otelcol.exporter.otlp.gc_fwd.input]
   }
 }
 
