@@ -27,6 +27,9 @@ jobs:
     needs:
       - check
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
     strategy:
       matrix:
         profile:
@@ -36,9 +39,23 @@ jobs:
       - uses: cachix/install-nix-action@v25
         with:
           enable_kvm: true
+
       # - uses: cachix/cachix-action@v14
       #   with:
       #     authToken: ${{ secrets.ALTF4LLC_CACHIX_AUTH_TOKEN }}
       #     name: ${{ env.CACHIX_BINARY_CACHE }}
+
       - uses: actions/checkout@v4
       - run: nix develop -c just build "${{ matrix.profile }}"
+
+      - uses: aws-actions/configure-aws-credentials@v4
+        if: github.ref == 'refs/heads/main'
+        with:
+          aws-region: us-west-2
+          role-to-assume: arn:aws:iam::677459762413:role/altf4llc-gha-vms-nix
+
+      - if: github.ref == 'refs/heads/main'
+        run: aws sts get-caller-identity
+
+      - if: github.ref == 'refs/heads/main'
+        run: nix develop -c just publish-ami "${{ matrix.profile }}"
