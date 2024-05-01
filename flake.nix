@@ -57,6 +57,7 @@
               ./modules/profiles/common.nix
               ./modules/mixins/github-actions
             ];
+            specialArgs.diskSize = 6 * 1024;
             format = "amazon"; # ami
           };
         };
