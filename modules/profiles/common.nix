@@ -1,5 +1,4 @@
-{ ... }:
-{
+{...}: {
   services.cachix-agent.enable = true;
 
   boot.loader.efi.canTouchEfiVariables = true;
@@ -16,7 +15,7 @@
 
   users.users.altf4 = {
     isNormalUser = true;
-    extraGroups = [ "wheel" ];
+    extraGroups = ["wheel"];
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDkhuhfzyg7R+O62XSktHufGmmhy6FNDi/NuPPJt7bI+"
     ];

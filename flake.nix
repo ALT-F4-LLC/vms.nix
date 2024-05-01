@@ -9,18 +9,22 @@
     srvos.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = inputs@{ flake-parts, ... }:
-    flake-parts.lib.mkFlake { inherit inputs; } {
-      systems = [ "x86_64-linux" "aarch64-linux" ];
+  outputs = inputs @ {flake-parts, ...}:
+    flake-parts.lib.mkFlake {inherit inputs;} {
+      systems = ["x86_64-linux" "aarch64-linux"];
 
-      perSystem = { pkgs, system, ... }:
-      let
+      perSystem = {
+        pkgs,
+        system,
+        ...
+      }: let
         inherit (pkgs) awscli2 just;
-      in
-      {
+      in {
         devShells.default = pkgs.mkShell {
-          buildInputs = [ awscli2 just ];
+          buildInputs = [awscli2 just];
         };
+
+        formatter = pkgs.alejandra;
 
         packages = {
           gc-fwd = inputs.nixos-generators.nixosGenerate {

@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-{
+{pkgs, ...}: {
   imports = [
     ../docker
     ../alloy
@@ -28,7 +27,7 @@
       "--net=host"
     ];
 
-    environmentFiles = [ "/run/keys/ecs.config" ];
+    environmentFiles = ["/run/keys/ecs.config"];
     environment = {
       ECS_LOGFILE = "/log/ecs-agent.log";
       ECS_LOGLEVEL = "info";

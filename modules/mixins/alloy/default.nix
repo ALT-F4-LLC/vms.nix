@@ -1,7 +1,6 @@
-{ config, ... }:
-{
+{config, ...}: {
   # see TODO further down
-  imports = [ ../docker ];
+  imports = [../docker];
 
   environment.etc."alloy/config.alloy" = {
     source = ./config.alloy;
