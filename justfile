@@ -17,7 +17,7 @@ publish-ami profile:
   IMAGE_PATH=$(cd "$OUTPUT" && ls *.vhd)
 
   echo "Uploading VHD to S3."
-  aws s3 cp "$OUTPUT/$IMAGE_PATH" "s3://{{ami_bucket}}/$IMAGE_NAME.vhd"
+  aws s3 cp "$OUTPUT/$IMAGE_PATH" "s3://{{ami_bucket}}/$IMAGE_NAME.vhd" --quiet
 
   echo "Starting snapshot import."
   TASK_ID=$(aws ec2 import-snapshot --disk-container "Format=VHD,UserBucket={S3Bucket={{ami_bucket}},S3Key=$IMAGE_NAME.vhd}" --output json | jq -r ".ImportTaskId")
