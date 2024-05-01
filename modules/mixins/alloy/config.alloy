@@ -1,0 +1,69 @@
+# We ship everything over OTLP
+otelcol.exporter.otlp "gc-fwd" {
+  client {
+    endpoint = "gc-fwd.altf4.internal:4317"
+    tls {
+      insecure             = true
+    }
+  }
+}
+
+# Convert Prometheus data for OTLP
+otelcol.receiver.prometheus "default" {
+  output {
+    metrics = [otelcol.exporter.otlp.gc-fwd.input]
+  }
+}
+
+# Convert Loki data for OTLP
+otelcol.receiver.loki "default" {
+  output {
+    logs = [otelcol.exporter.otlp.gc-fwd.input]
+  }
+}
+
+# Extract Systemd unit from journal entry
+loki.relabel "journal" {
+  forward_to = []
+
+  rule {
+    source_labels = ["__journal__systemd_unit"]
+    target_label  = "unit"
+  }
+}
+
+# Fetch journal entries
+loki.source.journal "journal" {
+  forward_to    = [otelcol.receiver.loki.default.receiver]
+  relabel_rules = loki.relabel.journal.rules
+  labels        = {component = "loki.source.journal"}
+}
+
+# Set instance label to the hostname
+prometheus.relabel "instance" {
+  forward_to = [otelcol.receiver.prometheus.default.receiver]
+  rule {
+    target_label = "instance"
+    replacement  = env("HOSTNAME")
+  }
+}
+
+# Export system metrics
+prometheus.exporter.unix "host" {
+  procfs_path    = "/host/proc"
+  sysfs_path     = "/host/sys"
+  rootfs_path    = "/rootfs"
+  udev_data_path = "/host/run/udev/data"
+
+  filesystem {
+    mount_points_exclude = "^/(sys|proc|dev|host|etc)($$|/)"
+  }
+}
+
+# Scrape system metrics
+prometheus.scrape "host" {
+  targets    = prometheus.exporter.unix.host.targets
+  forward_to = [prometheus.relabel.instance.receiver]
+}
+
+// vim:ft=hcl
