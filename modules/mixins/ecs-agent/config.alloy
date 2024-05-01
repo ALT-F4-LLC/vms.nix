@@ -1,14 +1,3 @@
-prometheus.exporter.cadvisor "cadvisor" {
-  docker_host      = "unix:///var/run/docker.sock"
-  storage_duration = "5m"
-}
-
-prometheus.scrape "cadvisor" {
-  targets         = prometheus.exporter.cadvisor.cadvisor.targets
-  forward_to      = [prometheus.relabel.instance.receiver]
-  scrape_interval = "30s"
-}
-
 prometheus.scrape "ecs-agent" {
   targets = [
     {"__address__" = "127.0.0.1:51680", instance = env("HOSTNAME")},
