@@ -35,6 +35,7 @@ jobs:
         profile:
           - gc-fwd
           - ecs-node
+          - actions-runner
     steps:
       - uses: cachix/install-nix-action@v25
         with:

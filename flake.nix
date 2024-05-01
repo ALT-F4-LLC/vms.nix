@@ -48,6 +48,17 @@
             ];
             format = "amazon"; # ami
           };
+
+          actions-runner = inputs.nixos-generators.nixosGenerate {
+            inherit system;
+            modules = [
+              inputs.srvos.nixosModules.server
+              inputs.srvos.nixosModules.hardware-amazon
+              ./modules/profiles/common.nix
+              ./modules/mixins/github-actions
+            ];
+            format = "amazon"; # ami
+          };
         };
       };
     };
