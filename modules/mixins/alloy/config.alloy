@@ -1,5 +1,5 @@
 // We ship everything over OTLP
-otelcol.exporter.otlp "gc-fwd" {
+otelcol.exporter.otlp "gc_fwd" {
   client {
     endpoint = "gc-fwd.altf4.internal:4317"
     tls {
@@ -11,14 +11,14 @@ otelcol.exporter.otlp "gc-fwd" {
 // Convert Prometheus data for OTLP
 otelcol.receiver.prometheus "default" {
   output {
-    metrics = [otelcol.exporter.otlp.gc-fwd.input]
+    metrics = [otelcol.exporter.otlp.gc_fwd.input]
   }
 }
 
 // Convert Loki data for OTLP
 otelcol.receiver.loki "default" {
   output {
-    logs = [otelcol.exporter.otlp.gc-fwd.input]
+    logs = [otelcol.exporter.otlp.gc_fwd.input]
   }
 }
 
@@ -29,6 +29,21 @@ loki.relabel "journal" {
   rule {
     source_labels = ["__journal__systemd_unit"]
     target_label  = "unit"
+  }
+
+  rule {
+    source_labels = ["__journal_container_name"]
+    target_label  = "container_name"
+  }
+
+  rule {
+    source_labels = ["__journal_image_name"]
+    target_label  = "container_image"
+  }
+
+  rule {
+    source_labels = ["__journal_container_id"]
+    target_label  = "container_id"
   }
 }
 
