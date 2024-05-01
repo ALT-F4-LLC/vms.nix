@@ -32,6 +32,12 @@ ciout() {
   if [[ "$ci" == "true" ]]; then echo "$1=$2" >> "$GITHUB_OUTPUT"; fi
 }
 
+cisum() {
+  if [[ "$ci" == "true" ]]; then
+    echo "$@" >> "$GITHUB_STEP_SUMMARY"
+  fi
+}
+
 build_time=$(date +%s)
 image_name="altf4llc-$profile-$build_time"
 ciout image_name "$image_name"
@@ -70,3 +76,12 @@ echo "::endgroup::"
 echo "::group::Cleaning up image VHD from bucket"
 aws s3 rm "s3://$bucket/$image_name.vhd"
 echo "::endgroup::"
+
+cisum "# :rocket: AMI build successful"
+cisum ""
+cisum "An image was successfully built for Nix profile \`$profile\`."
+cisum ""
+cisum "- Build time: \`$build_time\`"
+cisum "- VHD import job ID: \`$task_id\`"
+cisum "- AMI ID: \`$ami_id\`"
+cisum "- Snapshot ID: \`$snapshot_id\`"
