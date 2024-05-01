@@ -33,7 +33,7 @@
               inputs.srvos.nixosModules.server
               inputs.srvos.nixosModules.hardware-amazon
               ./modules/profiles/common.nix
-              ./modules/mixins/gc-fwd
+              ./modules/mixins/alloy-forwarder
             ];
             format = "amazon"; # ami
           };
