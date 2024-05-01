@@ -1,7 +1,6 @@
-# `vms.nix`
+# `vms-nix`
 
-[![License: Apache-2.0](https://img.shields.io/github/license/ALT-F4-LLC/vms.nix
-)](./LICENSE)
+[![License: Apache-2.0](https://img.shields.io/github/license/ALT-F4-LLC/vms-nix)](./LICENSE)
 
 NixOS-based VM images for ALT-F4 LLC. These images are built using
 [nixos-generators](https://github.com/nix-community/nixos-generators) and
@@ -29,7 +28,7 @@ configuration files land in `modules/profiles`, as they are not tied to any
 specific kind or role of image.
 
 ```
-vms.nix
+vms-nix
 ├── flake.lock
 ├── flake.nix
 ├── justfile
@@ -87,5 +86,5 @@ and/or logic will be present and we may be stubborn with them!
 
 ## License
 
-`vms.nix` is licensed under the Apache License Version 2.0. For full license
+`vms-nix` is licensed under the Apache License Version 2.0. For full license
 terms, see [`LICENSE`](./LICENSE).
