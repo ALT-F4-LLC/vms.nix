@@ -1,5 +1,5 @@
-# We ship everything over OTLP
-otelcol.exporter.otlp "gc-fwd" {
+// We ship everything over OTLP
+otelcol.exporter.otlp "gc_fwd" {
   client {
     endpoint = "gc-fwd.altf4.internal:4317"
     tls {
@@ -8,21 +8,26 @@ otelcol.exporter.otlp "gc-fwd" {
   }
 }
 
-# Convert Prometheus data for OTLP
+// Convert Prometheus data for OTLP
 otelcol.receiver.prometheus "default" {
   output {
-    metrics = [otelcol.exporter.otlp.gc-fwd.input]
+    metrics = [otelcol.exporter.otlp.gc_fwd.input]
   }
 }
 
-# Convert Loki data for OTLP
+// Convert OTLP data for Prometheus
+otelcol.exporter.prometheus "default" {
+  forward_to = [prometheus.relabel.instance.receiver]
+}
+
+// Convert Loki data for OTLP
 otelcol.receiver.loki "default" {
   output {
-    logs = [otelcol.exporter.otlp.gc-fwd.input]
+    logs = [otelcol.exporter.otlp.gc_fwd.input]
   }
 }
 
-# Extract Systemd unit from journal entry
+// Extract Systemd unit from journal entry
 loki.relabel "journal" {
   forward_to = []
 
@@ -30,16 +35,31 @@ loki.relabel "journal" {
     source_labels = ["__journal__systemd_unit"]
     target_label  = "unit"
   }
+
+  rule {
+    source_labels = ["__journal_container_name"]
+    target_label  = "container_name"
+  }
+
+  rule {
+    source_labels = ["__journal_image_name"]
+    target_label  = "container_image"
+  }
+
+  rule {
+    source_labels = ["__journal_container_id"]
+    target_label  = "container_id"
+  }
 }
 
-# Fetch journal entries
+// Fetch journal entries
 loki.source.journal "journal" {
   forward_to    = [otelcol.receiver.loki.default.receiver]
   relabel_rules = loki.relabel.journal.rules
   labels        = {component = "loki.source.journal"}
 }
 
-# Set instance label to the hostname
+// Set instance label to the hostname
 prometheus.relabel "instance" {
   forward_to = [otelcol.receiver.prometheus.default.receiver]
   rule {
@@ -48,7 +68,7 @@ prometheus.relabel "instance" {
   }
 }
 
-# Export system metrics
+// Export system metrics
 prometheus.exporter.unix "host" {
   procfs_path    = "/host/proc"
   sysfs_path     = "/host/sys"
@@ -60,7 +80,7 @@ prometheus.exporter.unix "host" {
   }
 }
 
-# Scrape system metrics
+// Scrape system metrics
 prometheus.scrape "host" {
   targets    = prometheus.exporter.unix.host.targets
   forward_to = [prometheus.relabel.instance.receiver]

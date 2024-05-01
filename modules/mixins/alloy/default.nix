@@ -1,4 +1,4 @@
-{config, ...}: {
+{...}: {
   # see TODO further down
   imports = [../docker];
 

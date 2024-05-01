@@ -1,0 +1,12 @@
+prometheus.exporter.cadvisor "cadvisor" {
+  docker_host      = "unix:///var/run/docker.sock"
+  storage_duration = "5m"
+}
+
+prometheus.scrape "cadvisor" {
+  targets         = prometheus.exporter.cadvisor.cadvisor.targets
+  forward_to      = [prometheus.relabel.instance.receiver]
+  scrape_interval = "30s"
+}
+
+// vim:ft=hcl

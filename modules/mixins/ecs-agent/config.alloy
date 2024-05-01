@@ -1,15 +1,4 @@
-prometheus.exporter.cadvisor "cadvisor" {
-  docker_host      = "unix:///var/run/docker.sock"
-  storage_duration = "5m"
-}
-
-prometheus.scrape "cadvisor" {
-  targets         = prometheus.exporter.cadvisor.cadvisor.targets
-  forward_to      = [prometheus.relabel.instance.receiver]
-  scrape_interval = "30s"
-}
-
-prometheus.scrape "ecs-agent" {
+prometheus.scrape "ecs_agent" {
   targets = [
     {"__address__" = "127.0.0.1:51680", instance = env("HOSTNAME")},
   ]
@@ -24,9 +13,9 @@ otelcol.receiver.otlp "otlp" {
   http {}
 
   output {
-    metrics = [prometheus.relabel.instance.receiver]
-    logs    = [otelcol.receiver.loki.default.receiver]
-    traces  = [otelcol.exporter.otlp.gc-fwd.input]
+    metrics = [otelcol.exporter.prometheus.default.input]
+    logs    = [otelcol.exporter.otlp.gc_fwd.input]
+    traces  = [otelcol.exporter.otlp.gc_fwd.input]
   }
 }
 
