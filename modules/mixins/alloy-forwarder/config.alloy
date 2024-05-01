@@ -1,0 +1,100 @@
+import.git "gcloud" {
+  repository     = "https://github.com/grafana/alloy-modules.git"
+  path           = "modules/cloud/grafana/cloud/module.river"
+  revision       = "main"
+  pull_frequency = "0s"
+}
+
+gcloud.stack "default" {
+    stack_name = env("GRAFANA_CLOUD_STACK")
+    token      = env("GRAFANA_CLOUD_TOKEN")
+}
+
+prometheus.receive_http "forward" {
+  http {
+    listen_address = "0.0.0.0"
+    listen_port = 9090
+  }
+  forward_to = [
+    grafana_cloud.stack.receivers.metrics,
+  ]
+}
+
+prometheus.scrape "linux_node" {
+  targets = prometheus.exporter.unix.node.targets
+  forward_to = [
+    grafana_cloud.stack.receivers.metrics,
+  ]
+}
+
+prometheus.exporter.unix "node" {
+}
+
+loki.source.api "receive" {
+    http {
+        listen_address = "0.0.0.0"
+        listen_port = 3100
+    }
+    forward_to = [
+      grafana_cloud.stack.receivers.logs,
+    ]
+}
+
+loki.relabel "journal" {
+  forward_to = []
+
+  rule {
+    source_labels = ["__journal__systemd_unit"]
+    target_label  = "unit"
+  }
+  rule {
+    source_labels = ["__journal__boot_id"]
+    target_label  = "boot_id"
+  }
+  rule {
+    source_labels = ["__journal__transport"]
+    target_label  = "transport"
+  }
+  rule {
+    source_labels = ["__journal_priority_keyword"]
+    target_label  = "level"
+  }
+  rule {
+    source_labels = ["__journal__hostname"]
+    target_label  = "instance"
+  }
+}
+
+loki.source.journal "read" {
+  forward_to = [
+    grafana_cloud.stack.receivers.logs,
+  ]
+  relabel_rules = loki.relabel.journal.rules
+  labels = {
+    "job" = "integrations/node_exporter",
+  }
+}
+
+otelcol.exporter.prometheus "to_prometheus" {
+  forward_to = [
+    grafana_cloud.stack.receivers.metrics,
+  ]
+}
+
+otelcol.exporter.loki "to_loki" {
+  forward_to = [
+    grafana_cloud.stack.receivers.logs,
+  ]
+}
+
+otelcol.receiver.otlp "default" {
+  grpc {}
+  http {}
+  output {
+    metrics = [otelcol.exporter.prometheus.to_prometheus.input]
+    logs = [otelcol.exporter.loki.to_loki.input]
+    traces = [grafana_cloud.stack.receivers.traces]
+  }
+}
+
+// vim:ft=hcl
