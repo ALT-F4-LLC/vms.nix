@@ -19,8 +19,8 @@
     image = "public.ecr.aws/ecs/amazon-ecs-agent:v1.82.3";
 
     ports = [
-      "127.0.0.1:51678:51678" # ecs metadata service
-      "127.0.0.1:51680:51680" # prometheus metrics
+      "51678:51678" # ecs metadata service
+      "51680:51680" # prometheus metrics
     ];
 
     extraOptions = [
@@ -29,7 +29,7 @@
 
     environmentFiles = ["/run/keys/ecs.config"];
     environment = {
-      ECS_LOGFILE = "/log/ecs-agent.log";
+      ECS_ENABLE_PROMETHEUS_METRICS = "true";
       ECS_LOGLEVEL = "info";
       ECS_DATADIR = "/data";
       ECS_UPDATES_ENABLED = "false";
