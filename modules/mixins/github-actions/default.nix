@@ -40,6 +40,8 @@ in
       ProtectHome = "tmpfs";
     };
 
+    extraLabels = [ "nixos" "nix" pkgs.stdenv.system ];
+
     extraPackages = with pkgs; [
       awscli2
       bashInteractive
