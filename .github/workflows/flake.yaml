@@ -13,7 +13,7 @@ jobs:
   check:
     runs-on: ubuntu-latest
     steps:
-      - uses: cachix/install-nix-action@v25
+      - uses: cachix/install-nix-action@v27
         with:
           enable_kvm: true
       - uses: cachix/cachix-action@v14
@@ -37,7 +37,7 @@ jobs:
           - ecs-node
           - actions-runner
     steps:
-      - uses: cachix/install-nix-action@v25
+      - uses: cachix/install-nix-action@v27
         with:
           enable_kvm: true
 
