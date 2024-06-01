@@ -1,6 +1,4 @@
 {...}: {
-  services.cachix-agent.enable = true;
-
   boot.loader.efi.canTouchEfiVariables = true;
 
   services.openssh.enable = true;
