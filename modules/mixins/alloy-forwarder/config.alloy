@@ -1,6 +1,6 @@
 import.git "grafana_cloud" {
   repository     = "https://github.com/grafana/alloy-modules.git"
-  path           = "modules/cloud/grafana/cloud/module.river"
+  path           = "modules/cloud/grafana/cloud/module.alloy"
   revision       = "main"
   pull_frequency = "0s"
 }
