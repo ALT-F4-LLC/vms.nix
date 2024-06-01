@@ -1,13 +1,13 @@
-import.git "gcloud" {
+import.git "grafana_cloud" {
   repository     = "https://github.com/grafana/alloy-modules.git"
   path           = "modules/cloud/grafana/cloud/module.river"
   revision       = "main"
   pull_frequency = "0s"
 }
 
-gcloud.stack "default" {
-    stack_name = env("GRAFANA_CLOUD_STACK")
-    token      = env("GRAFANA_CLOUD_TOKEN")
+grafana_cloud.stack "receivers" {
+  stack_name = env("GRAFANA_CLOUD_STACK")
+  token      = env("GRAFANA_CLOUD_TOKEN")
 }
 
 prometheus.receive_http "forward" {
