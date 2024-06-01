@@ -1,9 +1,6 @@
 # GitHub Actions runner mixin
 # In theory, compatible with x86_64-linux and aarch64-linux.
 { pkgs, ... }:
-let
-  name = "altf4llc-${pkgs.stdenv.system}";
-in
 {
   imports = [
     ../alloy
@@ -27,10 +24,10 @@ in
     group = "github-runner";
     extraGroups = [ "docker" ];
     isNormalUser = true;
-    home = "/run/github-runner/${name}";
+    home = "/run/github-runner/runner";
   };
 
-  services.github-runners.${name} = {
+  services.github-runners.runner = {
     enable = true;
     name = null;
     url = "https://github.com/ALT-F4-LLC";
