@@ -69,20 +69,20 @@ prometheus.relabel "instance" {
 }
 
 // Export system metrics
-prometheus.exporter.unix "host" {
-  procfs_path    = "/host/proc"
-  sysfs_path     = "/host/sys"
-  rootfs_path    = "/rootfs"
-  udev_data_path = "/host/run/udev/data"
-
-  filesystem {
-    mount_points_exclude = "^/(sys|proc|dev|host|etc)($$|/)"
-  }
-}
+prometheus.exporter.unix "host" {}
 
 // Scrape system metrics
 prometheus.scrape "host" {
   targets    = prometheus.exporter.unix.host.targets
+  forward_to = [prometheus.relabel.instance.receiver]
+}
+
+// Export agent metrics
+prometheus.exporter.self "agent" {}
+
+// Scrape agent metrics
+prometheus.scrape "agent" {
+  targets    = prometheus.exporter.self.agent.targets
   forward_to = [prometheus.relabel.instance.receiver]
 }
 

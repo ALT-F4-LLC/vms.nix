@@ -7,6 +7,9 @@
 
     srvos.url = "github:nix-community/srvos";
     srvos.inputs.nixpkgs.follows = "nixpkgs";
+
+    pkgs-nix.url = "github:ALT-F4-LLC/pkgs.nix";
+    pkgs-nix.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = inputs @ {flake-parts, ...}:
@@ -26,44 +29,7 @@
 
         formatter = pkgs.alejandra;
 
-        packages = {
-          gc-fwd = inputs.nixos-generators.nixosGenerate {
-            inherit system;
-            modules = [
-              inputs.srvos.nixosModules.server
-              inputs.srvos.nixosModules.hardware-amazon
-              ./modules/profiles/common.nix
-              ./modules/mixins/alloy-forwarder
-            ];
-            format = "amazon"; # ami
-          };
-
-          ecs-node = inputs.nixos-generators.nixosGenerate {
-            inherit system;
-            modules = [
-              inputs.srvos.nixosModules.server
-              inputs.srvos.nixosModules.hardware-amazon
-              ./modules/profiles/common.nix
-              ./modules/mixins/ecs-agent
-            ];
-            format = "amazon"; # ami
-          };
-
-          actions-runner = inputs.nixos-generators.nixosGenerate {
-            inherit system;
-            modules = [
-              ({...}: { amazonImage.sizeMB = 6 * 1024; })
-              inputs.srvos.nixosModules.server
-              inputs.srvos.nixosModules.hardware-amazon
-              ./modules/profiles/common.nix
-              ./modules/mixins/github-actions
-            ];
-            specialArgs = {
-              diskSize = 6 * 1024; # 6GB
-            };
-            format = "amazon"; # ami
-          };
-        };
+        packages = import ./nix/images.nix { inherit system inputs; };
       };
     };
 }

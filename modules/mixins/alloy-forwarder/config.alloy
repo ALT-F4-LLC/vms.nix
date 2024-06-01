@@ -1,13 +1,13 @@
-import.git "gcloud" {
+import.git "grafana_cloud" {
   repository     = "https://github.com/grafana/alloy-modules.git"
-  path           = "modules/cloud/grafana/cloud/module.river"
+  path           = "modules/cloud/grafana/cloud/module.alloy"
   revision       = "main"
   pull_frequency = "0s"
 }
 
-gcloud.stack "default" {
-    stack_name = env("GRAFANA_CLOUD_STACK")
-    token      = env("GRAFANA_CLOUD_TOKEN")
+grafana_cloud.stack "receivers" {
+  stack_name = env("GRAFANA_CLOUD_STACK")
+  token      = env("GRAFANA_CLOUD_TOKEN")
 }
 
 prometheus.receive_http "forward" {
@@ -22,12 +22,18 @@ prometheus.receive_http "forward" {
 
 prometheus.scrape "linux_node" {
   targets = prometheus.exporter.unix.node.targets
-  forward_to = [
-    grafana_cloud.stack.receivers.metrics,
-  ]
+  forward_to = [ grafana_cloud.stack.receivers.metrics ]
 }
 
 prometheus.exporter.unix "node" {
+}
+
+prometheus.exporter.self "agent" {
+}
+
+prometheus.scrape "agent" {
+  targets = prometheus.exporter.self.agent.targets
+  forward_to = [ grafana_cloud.stack.receivers.metrics ]
 }
 
 loki.source.api "receive" {
