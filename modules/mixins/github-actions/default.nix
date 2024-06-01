@@ -32,6 +32,7 @@ in
 
   services.github-runners.${name} = {
     enable = true;
+    name = null;
     url = "https://github.com/ALT-F4-LLC";
     user = "github-runner";
     tokenFile = "/run/keys/github-runner";
