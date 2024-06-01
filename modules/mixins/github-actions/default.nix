@@ -22,7 +22,7 @@ in
     };
   };
 
-  users.groups.github-runner = {};
+  users.groups.github-runner = { };
   users.users.github-runner = {
     group = "github-runner";
     extraGroups = [ "docker" ];

@@ -1,4 +1,4 @@
-{...}: {
+{ ... }: {
   imports = [
     ../docker
     ../alloy
@@ -27,7 +27,7 @@
       "--net=host"
     ];
 
-    environmentFiles = ["/run/keys/ecs.config"];
+    environmentFiles = [ "/run/keys/ecs.config" ];
     environment = {
       ECS_ENABLE_PROMETHEUS_METRICS = "true";
       ECS_LOGLEVEL = "info";
