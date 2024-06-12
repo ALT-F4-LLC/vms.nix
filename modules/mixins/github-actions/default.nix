@@ -1,7 +1,6 @@
 # GitHub Actions runner mixin
 # In theory, compatible with x86_64-linux and aarch64-linux.
-{ pkgs, ... }:
-{
+{pkgs, ...}: {
   imports = [
     ../alloy
     ../docker
@@ -15,14 +14,14 @@
     '';
     settings = {
       cores = 4;
-      trusted-users = [ "root" "github-runner" ];
+      trusted-users = ["root" "github-runner"];
     };
   };
 
-  users.groups.github-runner = { };
+  users.groups.github-runner = {};
   users.users.github-runner = {
     group = "github-runner";
-    extraGroups = [ "docker" ];
+    extraGroups = ["docker"];
     isNormalUser = true;
     home = "/run/github-runner/runner";
   };
@@ -34,11 +33,11 @@
     user = "github-runner";
     tokenFile = "/run/keys/github-runner";
     serviceOverrides = {
-      ReadWritePaths = [ "/nix/var/nix/profiles/per-user/" ];
+      ReadWritePaths = ["/nix/var/nix/profiles/per-user/"];
       ProtectHome = "tmpfs";
     };
 
-    extraLabels = [ "nixos" "nix" pkgs.stdenv.system ];
+    extraLabels = ["nixos" "nix" pkgs.stdenv.system];
 
     extraPackages = with pkgs; [
       awscli2
@@ -73,6 +72,7 @@
       util-linux
       which
       xz
+      zip
       zstd
     ];
   };
