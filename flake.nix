@@ -7,9 +7,6 @@
 
     srvos.url = "github:nix-community/srvos";
     srvos.inputs.nixpkgs.follows = "nixpkgs";
-
-    pkgs-nix.url = "github:ALT-F4-LLC/pkgs.nix";
-    pkgs-nix.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = inputs @ {flake-parts, ...}:
