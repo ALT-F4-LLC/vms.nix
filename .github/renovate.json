@@ -4,13 +4,11 @@
     "config:base",
     ":semanticCommitTypeAll(chore)"
   ],
-  "lockFileMaintenance": {
-    "enabled": true,
-    "extends": [
-      "schedule:weekly"
-    ]
-  },
   "nix": {
-    "enabled": true
+    "enabled": true,
+    "lockFileMaintenance": {
+      "enabled": true,
+      "extends": ["schedule:weekly"]
+    }
   }
 }
