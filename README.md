@@ -17,7 +17,7 @@ as part of the Nix store.
 There is also an `altf4` user baked into all images that has a list of trusted
 SSH keys on it. This user is for administrative purposes. 
 
-> ![NOTE]
+> [!NOTE]
 > On AMIs, the SSH keypair for `altf4` will not be overridden by setting the
 > SSH Key Pair option when provisioning the AMI. That option only applies to
 > the `root` user.
@@ -54,7 +54,7 @@ $ just build ecs-node
 
 ### Publishing an AMI to EC2
 
-> ![NOTE]
+> [!NOTE]
 > Using this if you're not a member of ALT-F4 requires some more steps. See
 > [`aws/README.md`](./aws/README.md) for more info.
 
