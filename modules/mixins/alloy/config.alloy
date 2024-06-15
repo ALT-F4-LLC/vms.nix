@@ -64,7 +64,7 @@ prometheus.relabel "instance" {
   forward_to = [otelcol.receiver.prometheus.default.receiver]
   rule {
     target_label = "instance"
-    replacement  = env("HOSTNAME")
+    replacement  = local.file.hostname.content
   }
 }
 

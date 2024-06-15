@@ -1,0 +1,56 @@
+// Grab hostname from /etc instead of environment variables
+local.file "hostname" {
+  filename = "/etc/hostname"
+}
+
+// Set hostname from /etc
+loki.relabel "instance" {
+  forward_to = []
+
+  rule {
+    target_label = "instance"
+    replacement  = local.file.hostname.content
+  }
+}
+
+// Loki journal relabeller
+loki.relabel "journal" {
+  forward_to = []
+
+  rule {
+    source_labels = ["__journal__systemd_unit"]
+    target_label  = "unit"
+  }
+
+  rule {
+    source_labels = ["__journal__boot_id"]
+    target_label  = "boot_id"
+  }
+
+  rule {
+    source_labels = ["__journal__transport"]
+    target_label  = "transport"
+  }
+
+  rule {
+    source_labels = ["__journal_priority_keyword"]
+    target_label  = "level"
+  }
+
+  rule {
+    source_labels = ["__journal_container_name"]
+    target_label  = "container_name"
+  }
+
+  rule {
+    source_labels = ["__journal_image_name"]
+    target_label  = "container_image"
+  }
+
+  rule {
+    source_labels = ["__journal_container_id"]
+    target_label  = "container_id"
+  }
+}
+
+// vim:ft=hcl

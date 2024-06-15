@@ -16,24 +16,6 @@
         "type": "indirect"
       }
     },
-    "flake-parts_2": {
-      "inputs": {
-        "nixpkgs-lib": "nixpkgs-lib_2"
-      },
-      "locked": {
-        "lastModified": 1715865404,
-        "narHash": "sha256-/GJvTdTpuDjNn84j82cU6bXztE0MSkdnTWClUCRub78=",
-        "owner": "hercules-ci",
-        "repo": "flake-parts",
-        "rev": "8dc45382d5206bd292f9c2768b8058a8fd8311d9",
-        "type": "github"
-      },
-      "original": {
-        "owner": "hercules-ci",
-        "repo": "flake-parts",
-        "type": "github"
-      }
-    },
     "nixlib": {
       "locked": {
         "lastModified": 1712450863,
@@ -104,45 +86,11 @@
         "type": "github"
       }
     },
-    "nixpkgs-lib_2": {
-      "locked": {
-        "lastModified": 1714640452,
-        "narHash": "sha256-QBx10+k6JWz6u7VsohfSw8g8hjdBZEf8CFzXH1/1Z94=",
-        "type": "tarball",
-        "url": "https://github.com/NixOS/nixpkgs/archive/50eb7ecf4cd0a5756d7275c8ba36790e5bd53e33.tar.gz"
-      },
-      "original": {
-        "type": "tarball",
-        "url": "https://github.com/NixOS/nixpkgs/archive/50eb7ecf4cd0a5756d7275c8ba36790e5bd53e33.tar.gz"
-      }
-    },
-    "pkgs-nix": {
-      "inputs": {
-        "flake-parts": "flake-parts_2",
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1717279556,
-        "narHash": "sha256-msDwm0MHE+zvAfuWXtTBVR4PQhnI/MU9XQzx+4LbUP0=",
-        "owner": "ALT-F4-LLC",
-        "repo": "pkgs.nix",
-        "rev": "3143fc567c8d82edadda31efe90ccc5c2d5d5c64",
-        "type": "github"
-      },
-      "original": {
-        "owner": "ALT-F4-LLC",
-        "repo": "pkgs.nix",
-        "type": "github"
-      }
-    },
     "root": {
       "inputs": {
         "flake-parts": "flake-parts",
         "nixos-generators": "nixos-generators",
         "nixpkgs": "nixpkgs",
-        "pkgs-nix": "pkgs-nix",
         "srvos": "srvos"
       }
     },

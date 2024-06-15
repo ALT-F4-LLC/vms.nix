@@ -20,12 +20,21 @@ prometheus.receive_http "forward" {
   ]
 }
 
-prometheus.scrape "linux_node" {
-  targets = prometheus.exporter.unix.node.targets
-  forward_to = [ grafana_cloud.stack.receivers.metrics ]
+// Set instance label to the hostname
+prometheus.relabel "instance" {
+  forward_to = [grafana_cloud.stack.receivers.metrics]
+  rule {
+    target_label = "instance"
+    replacement  = local.file.hostname.content
+  }
 }
 
 prometheus.exporter.unix "node" {
+}
+
+prometheus.scrape "linux_node" {
+  targets = prometheus.exporter.unix.node.targets
+  forward_to = [prometheus.relabel.instance.receiver]
 }
 
 prometheus.exporter.self "agent" {
@@ -33,7 +42,7 @@ prometheus.exporter.self "agent" {
 
 prometheus.scrape "agent" {
   targets = prometheus.exporter.self.agent.targets
-  forward_to = [ grafana_cloud.stack.receivers.metrics ]
+  forward_to = [prometheus.relabel.instance.receiver]
 }
 
 loki.source.api "receive" {
@@ -46,45 +55,21 @@ loki.source.api "receive" {
     ]
 }
 
-loki.relabel "journal" {
-  forward_to = []
-
-  rule {
-    source_labels = ["__journal__systemd_unit"]
-    target_label  = "unit"
-  }
-  rule {
-    source_labels = ["__journal__boot_id"]
-    target_label  = "boot_id"
-  }
-  rule {
-    source_labels = ["__journal__transport"]
-    target_label  = "transport"
-  }
-  rule {
-    source_labels = ["__journal_priority_keyword"]
-    target_label  = "level"
-  }
-  rule {
-    source_labels = ["__journal__hostname"]
-    target_label  = "instance"
-  }
-}
-
 loki.source.journal "read" {
   forward_to = [
     grafana_cloud.stack.receivers.logs,
   ]
-  relabel_rules = loki.relabel.journal.rules
+  relabel_rules = concat(
+    loki.relabel.journal.rules,
+    loki.relabel.instance.rules,
+  )
   labels = {
     "job" = "integrations/node_exporter",
   }
 }
 
 otelcol.exporter.prometheus "to_prometheus" {
-  forward_to = [
-    grafana_cloud.stack.receivers.metrics,
-  ]
+  forward_to = [grafana_cloud.stack.receivers.metrics]
 }
 
 otelcol.exporter.loki "to_loki" {
