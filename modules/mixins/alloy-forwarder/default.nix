@@ -15,12 +15,9 @@
     4317 # OTLP/gRPC
   ];
 
-  services.alloy = {
-    extraArgs = "--stability.level public-preview";
-
-    environmentFiles = [ "/run/keys/grafana-cloud" ];
-    extraEnvironment = {
-      GRAFANA_CLOUD_STACK = "altf4llc";
-    };
+  services.alloy.extraFlags = ["--stability.level=public-preview"];
+  systemd.services.alloy.serviceConfig.EnvironmentFile = [ "/run/keys/grafana-cloud" ];
+  systemd.services.alloy.environment = {
+    GRAFANA_CLOUD_STACK = "altf4llc";
   };
 }
