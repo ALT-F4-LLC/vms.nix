@@ -67,15 +67,15 @@ echo "New snapshot is $snapshot_id."
 ciout snapshot_id "$snapshot_id"
 endgroup
 
-echo "::group::Registering new AMI"
+group "Registering new AMI"
 ami_id=$(aws ec2 register-image --architecture x86_64 --ena-support --name "$image_name" --description "A NixOS AMI: {{profile}}" --block-device-mappings "DeviceName=/dev/sda1,Ebs={SnapshotId=$snapshot_id}" --root-device-name /dev/sda1 | jq .ImageId)
 echo "AMI is registered: $ami_id"
 ciout ami_id "$ami_id"
-echo "::endgroup::"
+endgroup
 
-echo "::group::Cleaning up image VHD from bucket"
+group "Cleaning up image VHD from bucket"
 aws s3 rm "s3://$bucket/$image_name.vhd"
-echo "::endgroup::"
+endgroup
 
 cisum "# :rocket: AMI build successful"
 cisum ""
