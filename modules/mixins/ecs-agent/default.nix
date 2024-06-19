@@ -47,9 +47,5 @@
   };
 
   # Monitoring
-  environment.etc."alloy/ecs-agent.alloy" = {
-    source = ./config.alloy;
-    mode = "0440";
-    user = "root";
-  };
+  environment.etc."alloy/ecs-agent.alloy".source = ./config.alloy;
 }

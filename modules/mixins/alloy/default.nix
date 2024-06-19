@@ -1,11 +1,7 @@
 { pkgs-nix, pkgs, ... }: {
   imports = [ pkgs-nix.nixosModules.alloy ];
 
-  environment.etc."alloy/config.alloy" = {
-    source = ./config.alloy;
-    mode = "0440";
-    user = "root";
-  };
+  environment.etc."alloy/config.alloy".source = ./config.alloy;
 
   services.alloy = {
     enable = true;
