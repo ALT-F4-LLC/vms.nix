@@ -10,22 +10,22 @@ env:
   CACHIX_BINARY_CACHE: altf4llc-os
 
 jobs:
-  check:
+  test:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        profile:
+          - alloy
     steps:
       - uses: cachix/install-nix-action@v27
-        with:
-          enable_kvm: true
       - uses: cachix/cachix-action@v15
         with:
           authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
           name: ${{ env.CACHIX_BINARY_CACHE }}
       - uses: actions/checkout@v4
-      - run: nix develop -c just check
+      - run: nix develop -c just test "${{ matrix.profile }}"
 
   build:
-    needs:
-      - check
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -38,9 +38,6 @@ jobs:
           - actions-runner
     steps:
       - uses: cachix/install-nix-action@v27
-        with:
-          enable_kvm: true
-
       - uses: cachix/cachix-action@v15
         with:
           authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
