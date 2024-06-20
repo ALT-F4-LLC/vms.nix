@@ -3,19 +3,14 @@ local.file "hostname" {
   filename = "/etc/hostname"
 }
 
-// Set hostname from /etc
-loki.relabel "instance" {
+// Loki journal relabeller
+loki.relabel "omnibus" {
   forward_to = []
 
   rule {
     target_label = "instance"
     replacement  = local.file.hostname.content
   }
-}
-
-// Loki journal relabeller
-loki.relabel "journal" {
-  forward_to = []
 
   rule {
     source_labels = ["__journal__systemd_unit"]

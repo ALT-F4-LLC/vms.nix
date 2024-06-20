@@ -24,6 +24,8 @@
           buildInputs = [awscli2 just];
         };
 
+        checks = import ./modules/tests { inherit pkgs; };
+
         formatter = pkgs.alejandra;
 
         packages = import ./nix/images.nix { inherit system inputs; };

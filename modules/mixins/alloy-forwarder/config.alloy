@@ -50,19 +50,12 @@ loki.source.api "receive" {
         listen_address = "0.0.0.0"
         listen_port = 3100
     }
-    forward_to = [
-      grafana_cloud.stack.receivers.logs,
-    ]
+    forward_to = [grafana_cloud.stack.receivers.logs]
 }
 
 loki.source.journal "read" {
-  forward_to = [
-    grafana_cloud.stack.receivers.logs,
-  ]
-  relabel_rules = concat(
-    loki.relabel.journal.rules,
-    loki.relabel.instance.rules,
-  )
+  forward_to = [grafana_cloud.stack.receivers.logs]
+  relabel_rules = loki.relabel.omnibus.rules
   labels = {
     "job" = "integrations/node_exporter",
   }

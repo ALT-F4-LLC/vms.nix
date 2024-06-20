@@ -1,8 +1,5 @@
 prometheus.scrape "ecs_agent" {
-  targets = [
-    {"__address__" = "127.0.0.1:51680", instance = env("HOSTNAME")},
-  ]
-
+  targets         = [{"__address__" = "127.0.0.1:51680"}]
   forward_to      = [prometheus.relabel.instance.receiver]
   scrape_interval = "30s"
 }
