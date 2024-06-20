@@ -9,7 +9,7 @@ loki.relabel "omnibus" {
 
   rule {
     target_label = "instance"
-    replacement  = local.file.hostname.content
+    replacement  = local.file.hostname.conten
   }
 
   rule {

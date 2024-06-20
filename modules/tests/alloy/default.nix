@@ -8,8 +8,9 @@ pkgs.testers.runNixOSTest {
   };
 
   testScript = ''
+    import time
     machine.wait_for_unit("alloy.service", timeout=10)
-    machine.wait_for_open_port(12345)
+    machine.wait_for_open_port(12345, timeout=10)
     machine.succeed("curl http://localhost:12345 | grep -o \"Grafana Alloy\"")
   '';
 }
