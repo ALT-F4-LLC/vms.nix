@@ -27,31 +27,6 @@ otelcol.receiver.loki "default" {
   }
 }
 
-// Extract Systemd unit from journal entry
-loki.relabel "journal" {
-  forward_to = []
-
-  rule {
-    target_label = "instance"
-    replacement  = local.file.hostname.content
-  }
-
-  rule {
-    source_labels = ["__journal__systemd_unit"]
-    target_label  = "unit"
-  }
-
-  rule {
-    source_labels = ["__journal__boot_id"]
-    target_label  = "boot_id"
-  }
-
-  rule {
-    source_labels = ["__journal__transport"]
-    target_label  = "transport"
-  }
-}
-
 // Fetch journal entries
 loki.source.journal "journal" {
   forward_to    = [otelcol.receiver.loki.default.receiver]
@@ -64,7 +39,7 @@ prometheus.relabel "instance" {
   forward_to = [otelcol.receiver.prometheus.default.receiver]
   rule {
     target_label = "instance"
-    replacement  = local.file.hostname.content
+    replacement  = trim_space(local.file.hostname.content)
   }
 }
 
