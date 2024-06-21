@@ -25,7 +25,7 @@ prometheus.relabel "instance" {
   forward_to = [grafana_cloud.stack.receivers.metrics]
   rule {
     target_label = "instance"
-    replacement  = local.file.hostname.content
+    replacement  = trim_space(local.file.hostname.content)
   }
 }
 
