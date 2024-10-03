@@ -17,7 +17,7 @@ jobs:
         profile:
           - alloy
     steps:
-      - uses: cachix/install-nix-action@v27
+      - uses: cachix/install-nix-action@v30
       - uses: cachix/cachix-action@v15
         with:
           authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
@@ -37,7 +37,7 @@ jobs:
           - ecs-node
           - actions-runner
     steps:
-      - uses: cachix/install-nix-action@v27
+      - uses: cachix/install-nix-action@v30
       - uses: cachix/cachix-action@v15
         with:
           authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
