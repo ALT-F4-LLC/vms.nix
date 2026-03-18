@@ -18,7 +18,7 @@ jobs:
           - alloy
     steps:
       - uses: cachix/install-nix-action@v27
-      - uses: cachix/cachix-action@v16
+      - uses: cachix/cachix-action@v17
         with:
           authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
           name: ${{ env.CACHIX_BINARY_CACHE }}
@@ -38,7 +38,7 @@ jobs:
           - actions-runner
     steps:
       - uses: cachix/install-nix-action@v27
-      - uses: cachix/cachix-action@v16
+      - uses: cachix/cachix-action@v17
         with:
           authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
           name: ${{ env.CACHIX_BINARY_CACHE }}
